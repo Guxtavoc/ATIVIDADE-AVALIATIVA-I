@@ -118,20 +118,28 @@ int BuscaBNome(dados *aluno, int n, char *nome){//COMPLETA, EU ACHO
         }
     }
     int ini=0,fim=n-1,meio;
-    while(ini<=fim){//Algoritmo de busca binaria (Internet)
-        meio=(ini+fim)/2;
-        int cmp=strcasecmp(nome,copia[meio].nome);
-        if(cmp==0){//fazer captar mais de um igual, mas como?
-            iguais[x]=copia[meio];
-            x++;
-            continue;
+    while (ini <= fim) { // Algoritmo de busca binária
+    meio = (ini + fim) / 2;
+    int cmp = strcasecmp(nome, copia[meio].nome);
+
+    if (cmp == 0) {
+        iguais[x++] = copia[meio];
+        int temp = meio - 1;
+        while (temp >= ini && strcasecmp(nome, copia[temp].nome) == 0) {
+            iguais[x++] = copia[temp--];
         }
-        if(cmp<0){
-            fim=meio-1;
-        }else{
-            ini=meio+1;
+        temp = meio + 1;
+        while (temp <= fim && strcasecmp(nome, copia[temp].nome) == 0) {
+            iguais[x++] = copia[temp++];
         }
+        break;
     }
+    if (cmp < 0) {
+        fim = meio - 1;
+    } else {
+        ini = meio + 1;
+    }
+}
     if(x==1){
         free(copia);
         return iguais[0].mat;
