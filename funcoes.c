@@ -2,36 +2,28 @@
 #include <stdlib.h>
 #include "funcoes.h"
 #include <string.h>
-int incremento(int quantidade, int n){//Implementada, porém não sei se é necessaria...
-    switch (n){
-    case 3://Caso para incrmentar a quantidade ativa
+int incremento(int quantidade){
         quantidade++;
-        break;
-    }
     return quantidade;
 }
 void cadastro(dados **aluno,int *quant){
-    *quant=incremento(*quant,3);//Incrementa a quantidade
-    *aluno=realloc(*aluno,(size_t)(*quant)*sizeof(dados));//Cogitar trocar por realloc ou calloc
+    *quant=incremento(*quant);
+    *aluno=realloc(*aluno,(size_t)(*quant)*sizeof(dados));
     printf("Entre com o nome do aluno: ");
     scanf("%14s",(*aluno)[*quant-1].nome);
     printf("Entre com o Sobrenome do aluno: ");
     scanf("%19s",(*aluno)[*quant-1].sNome);
-    strcpy((*aluno)[*quant-1].nomeC,(*aluno)[*quant-1].nome);//Copiando o 1º nome para a variavel
-    strcat((*aluno)[*quant-1].nomeC," ");//Adicionando um espaço para evitar comportamentos inesperados durante a ordenação
-    strcat((*aluno)[*quant-1].nomeC,(*aluno)[*quant-1].sNome);//Concatenando o sobrenome ao 1º nome
-    //Criar menu/função para adicionar os cursos e atrelar seus valores?
+    strcpy((*aluno)[*quant-1].nomeC,(*aluno)[*quant-1].nome);
+    strcat((*aluno)[*quant-1].nomeC," ");
+    strcat((*aluno)[*quant-1].nomeC,(*aluno)[*quant-1].sNome);
     printf("Entre com o nome do curso: ");
     scanf("%19s",(*aluno)[*quant-1].curso);
     printf("Entre com o valor do curso: ");
     scanf("%f",&(*aluno)[*quant-1].valor);
-    (*aluno)[*quant-1].mat=*quant+99;//Define matrícula
+    (*aluno)[*quant-1].mat=*quant+99;
 }
-
-//Criar menu/função para adicionar os cursos e atrelar seus valores?
-
-void imprime(dados *aluno,int n){//Função temporaria...
-    printf("Quantidade cadastrada = %d\n",n);//DEBUG, verificador da quantidade
+void imprime(dados *aluno,int n){
+    printf("Quantidade cadastrada = %d\n",n);
     for(int i=0;i<n;i++){
             printf("Nome: %s ",aluno[i].nomeC);
             printf("Sobrenome: %s ",aluno[i].sNome);
@@ -40,7 +32,7 @@ void imprime(dados *aluno,int n){//Função temporaria...
             printf("Matricula: %d \n",aluno[i].mat);
         }
 }
-void busca(dados *aluno,int n){//Falta implementar
+void busca(dados *aluno,int n){
     int op,tMat,encontrado,x;
     char tNome[15];
     do{
@@ -87,7 +79,7 @@ void busca(dados *aluno,int n){//Falta implementar
             printf("informacao nao localizada!\nPor favor tente novamente\n");
     }while(op!=0);
 }
-int BuscaBMat(int x,dados *aluno,int n){//Codigo de busca binaria do Slago
+int BuscaBMat(int x,dados *aluno,int n){
 	int i,f,m;
 	i=0;
 	f=n-1;
@@ -101,14 +93,13 @@ int BuscaBMat(int x,dados *aluno,int n){//Codigo de busca binaria do Slago
 	}
 	return -1;
 }
-int BuscaBNome(dados *aluno, int n, char *nome){//COMPLETA, EU ACHO
+int BuscaBNome(dados *aluno, int n, char *nome){
     int i,j,x=0;
-    dados *copia=malloc((size_t)n *sizeof(dados));//considerar utilizar size_t
+    dados *copia=malloc((size_t)n *sizeof(dados));
     dados iguais[n];
-    //printf("Ate aqui funciona\n");
-    for(int b=0;b<n;b++)//copiando o vetor para evitar perca de dados
+    for(int b=0;b<n;b++)
         copia[b]=aluno[b];
-    for(i=1;i<n;i++) {//Algoritmo de ordenação bubble sort (Slago) para ordem alfabetica
+    for(i=1;i<n;i++) {
         for(j=0;j<n-i;j++){
             if(strcasecmp(copia[j].nomeC,copia[j+1].nomeC)>0){
                 dados temp=copia[j];
@@ -118,10 +109,9 @@ int BuscaBNome(dados *aluno, int n, char *nome){//COMPLETA, EU ACHO
         }
     }
     int ini=0,fim=n-1,meio;
-    while (ini <= fim) { // Algoritmo de busca binária
+    while (ini <= fim) {
     meio = (ini + fim) / 2;
     int cmp = strcasecmp(nome, copia[meio].nome);
-
     if (cmp == 0) {
         iguais[x++] = copia[meio];
         int temp = meio - 1;
@@ -139,7 +129,7 @@ int BuscaBNome(dados *aluno, int n, char *nome){//COMPLETA, EU ACHO
     } else {
         ini = meio + 1;
     }
-}
+    }
     if(x==1){
         free(copia);
         return iguais[0].mat;
@@ -204,7 +194,7 @@ void relatorio_mensalidade(dados *aluno,int n){
     }while(op!=0);
     printf("Imprimindo relatorio\n");
     for(int a=0;a<n;a++)
-        printf("Nome Completo: %s, Curso: %s, Mensalidade: %f\n",copia[a].nomeC,copia[a].curso,copia[a].valor);
+        printf("Nome Completo: %s, Curso: %s, Mensalidade: R$%.2f\n",copia[a].nomeC,copia[a].curso,copia[a].valor);
     free(copia);
 }
 void troca(dados *a, dados *b) {
@@ -214,11 +204,11 @@ void troca(dados *a, dados *b) {
 }
 int particiona(dados alunos[], int baixo, int alto) {
     char pivo[15];
-    strcpy(pivo, alunos[alto].nome); // Escolhe o nome do último aluno como pivô
+    strcpy(pivo, alunos[alto].nome);
     int i = baixo - 1;
 
     for (int j = baixo; j < alto; j++) {
-        if (strcmp(alunos[j].nome, pivo) < 0) { // Comparação alfabética
+        if (strcmp(alunos[j].nome, pivo) < 0) {
             i++;
             troca(&alunos[i], &alunos[j]);
         }
@@ -226,7 +216,7 @@ int particiona(dados alunos[], int baixo, int alto) {
     troca(&alunos[i + 1], &alunos[alto]);
     return i + 1;
 }
-void quicksort(dados alunos[], int baixo, int alto) {//Codigo do quick sort pegado da internet
+void quicksort(dados alunos[], int baixo, int alto) {
     if (baixo < alto) {
         int pi = particiona(alunos, baixo, alto);
         quicksort(alunos, baixo, pi - 1);
@@ -236,5 +226,5 @@ void quicksort(dados alunos[], int baixo, int alto) {//Codigo do quick sort pega
 void imprimeRelatorio(dados *aluno,int quant){
     printf("Imprimindo relatorio\n");
     for(int a=0;a<quant;a++)
-        printf("Nome Completo: %s, Curso: %s, Mensalidade: %f\n",aluno[a].nomeC,aluno[a].curso,aluno[a].valor);
+        printf("Nome Completo: %s, Curso: %s, Mensalidade: R$%.2f\n",aluno[a].nomeC,aluno[a].curso,aluno[a].valor);
 }
